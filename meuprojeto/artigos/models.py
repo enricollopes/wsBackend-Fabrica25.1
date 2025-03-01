@@ -9,7 +9,6 @@ class Articles(models.Model):
     def __str__(self):
         return self.titulo
 
-
 class Comment(models.Model):
     artigo = models.ForeignKey(Articles, related_name='comentarios', on_delete=models.CASCADE)  # Relacionamento com Artigos
     autor = models.CharField(max_length=255)  # Nome do autor do comentário

@@ -1,6 +1,7 @@
+from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.decorators import action  # Import @action here
+from rest_framework.decorators import action  
 from .models import Articles, Comment
 from .serializers import ArticleSerializer, CommentSerializer
 import requests
@@ -9,7 +10,6 @@ class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Articles.objects.all()
     serializer_class = ArticleSerializer
 
-    # Ação customizada para buscar artigos do NYTimes
     @action(detail=False, methods=['get'])
     def search_articles(self, request):
         query = request.query_params.get('query', '')
@@ -21,7 +21,6 @@ class ArticleViewSet(viewsets.ModelViewSet):
             data = response.json()
             articles = data.get('response', {}).get('docs', [])
             
-            # Salvar artigos no banco de dados
             for article_data in articles:
                 article = Articles(
                     titulo=article_data.get('headline', {}).get('main', 'No Title'),  
@@ -31,10 +30,11 @@ class ArticleViewSet(viewsets.ModelViewSet):
                 )
                 article.save()
 
-            return Response(articles)  # Retorne uma resposta adequada, por exemplo, com o status e os artigos
+            return Response(articles)  
         else:
-            return Response({"error": "Query parameter is required."}, status=400)
+            return Response({"error": "Parâmetro Query requisitado."}, status=400)
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+
